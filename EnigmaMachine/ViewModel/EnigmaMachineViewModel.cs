@@ -301,11 +301,12 @@ namespace EnigmaMachine.ViewModel
 
 			for (int i = 0; i < pairs.Length; i++)
 			{
-				string[] letters = pairs[i].Split(':');
+				string[] letters = pairs[i].Split('-');
 
 				if(letters.Length == 2)
 				{
 					plugboardCharacters[letters[0].ToUpper()[0]] = letters[1].ToUpper()[0];
+					plugboardCharacters[letters[1].ToUpper()[0]] = letters[0].ToUpper()[0];
 				}
 			}
 

@@ -135,7 +135,10 @@
 					</StackPanel>
 
 					<Label Content="Plugboard" Margin="0,20,0,0" HorizontalAlignment="Left"  VerticalAlignment="Top" Height="24" Width="312"/>
-					<TextBox Height="130" Text="Not yet implemented" IsEnabled="False">
+					<Label>Paire two characters by using -</Label>
+					<Label>Add multiple pairs seperated by ;</Label>
+					<Label>Example: A-B;C-D</Label>
+					<TextBox Height="130" Text="{Binding Plugboard}">
 						
 					</TextBox>
 					
