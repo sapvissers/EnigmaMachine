@@ -1,0 +1,13 @@
+D:\EnigmaMachine\EnigmaMachine\bin\Release\EnigmaMachine.exe.config
+D:\EnigmaMachine\EnigmaMachine\bin\Release\EnigmaMachine.exe
+D:\EnigmaMachine\EnigmaMachine\bin\Release\EnigmaMachine.pdb
+D:\EnigmaMachine\EnigmaMachine\obj\Release\View\EnigmaMachineView.g.cs
+D:\EnigmaMachine\EnigmaMachine\obj\Release\App.g.cs
+D:\EnigmaMachine\EnigmaMachine\obj\Release\EnigmaMachine_MarkupCompile.cache
+D:\EnigmaMachine\EnigmaMachine\obj\Release\EnigmaMachine_MarkupCompile.lref
+D:\EnigmaMachine\EnigmaMachine\obj\Release\View\EnigmaMachineView.baml
+D:\EnigmaMachine\EnigmaMachine\obj\Release\EnigmaMachine.g.resources
+D:\EnigmaMachine\EnigmaMachine\obj\Release\EnigmaMachine.Properties.Resources.resources
+D:\EnigmaMachine\EnigmaMachine\obj\Release\EnigmaMachine.csproj.GenerateResource.Cache
+D:\EnigmaMachine\EnigmaMachine\obj\Release\EnigmaMachine.exe
+D:\EnigmaMachine\EnigmaMachine\obj\Release\EnigmaMachine.pdb

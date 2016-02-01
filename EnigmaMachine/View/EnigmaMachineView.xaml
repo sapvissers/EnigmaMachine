@@ -1,0 +1,147 @@
+﻿<Window x:Class="EnigmaMachine.View.EnigmaMachineView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:ViewModel="clr-namespace:EnigmaMachine.ViewModel"
+        Title="EnigmaMachine" Height="569" Width="671" WindowStartupLocation="CenterScreen" FontFamily="Courier New" ResizeMode="CanMinimize">
+	<Grid>
+		<StackPanel>
+			<Label Height="35" Content="Enigma Machine" FontSize="24"/>
+			<Grid Height="505">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="2*"/>
+					<ColumnDefinition Width="2*"/>
+				</Grid.ColumnDefinitions>
+				<StackPanel Margin="10,0,10,10" Grid.Column="0">
+					<StackPanel>
+						<Label Content="Input" HorizontalAlignment="Left"  VerticalAlignment="Top" Height="24" Width="312"/>
+						<TextBox Height="214" AcceptsReturn="True" TextWrapping="Wrap" Text="{Binding InputText}" Background="#FFE2E2E2"/>
+					</StackPanel>
+					<StackPanel>
+						<StackPanel Orientation="Horizontal" HorizontalAlignment="Left"  VerticalAlignment="Top" Height="30" Width="312">
+							<Label Content="Output" VerticalAlignment="Bottom"/>
+                            <Button Margin="80,0" Width="100" Height="20" Command="{Binding UpdateCommand}">▼ Update ▼</Button>
+						</StackPanel>
+						
+						
+						<TextBox Height="214" Background="#FFE2E2E2" Text="{Binding OutputText, Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap" />
+					</StackPanel>
+				</StackPanel>
+				<StackPanel Margin="10,0,10,10" Grid.Column="1">
+					<Label Content="Enigma emulator" HorizontalAlignment="Left"  VerticalAlignment="Top" Height="24" Width="312"/>
+					<Grid>
+                        <ComboBox ItemsSource="{Binding AvailableEnigmaEncoders}"
+								SelectedItem="{Binding SelectedEnigmaEncoderName}"/>
+					</Grid>
+					<Label Content="UKW type" Margin="0,20,0,0"  HorizontalAlignment="Left"  VerticalAlignment="Top" Height="24" Width="312"/>
+					<ComboBox ItemsSource="{Binding Path=AvailableUkwTypes}"
+							SelectedItem="{Binding Path=SelectedUwkTypeName}"/>
+					<Label Content="Rotor selection" Margin="0,20,0,0"  HorizontalAlignment="Left"  VerticalAlignment="Top" Height="24" Width="312"/>
+					
+					<StackPanel Orientation="Horizontal" >
+						<ComboBox Margin="0,0,10,0" Width="60" ItemsSource="{Binding Path=AvailableRotors}"
+							SelectedItem="{Binding Path=SelectedRotorName1}"/>
+						<ComboBox Margin="10,0" Width="60" ItemsSource="{Binding Path=AvailableRotors}"
+							SelectedItem="{Binding Path=SelectedRotorName2}"/>
+						<ComboBox Margin="10,0" Width="60" ItemsSource="{Binding Path=AvailableRotors}"
+							SelectedItem="{Binding Path=SelectedRotorName3}"/>
+					</StackPanel>
+					
+					<Label Content="Rotor positions" Margin="0,20,0,0"  HorizontalAlignment="Left"  VerticalAlignment="Top" Height="24" Width="312"/>
+					<StackPanel Orientation="Horizontal">
+						<ComboBox Margin="0,0,10,0" Width="60" SelectedItem="{Binding Path=RotorPosition1}" >
+							<ComboBoxItem IsSelected="True">A</ComboBoxItem>
+							<ComboBoxItem>B</ComboBoxItem>
+							<ComboBoxItem>C</ComboBoxItem>
+							<ComboBoxItem>D</ComboBoxItem>
+							<ComboBoxItem>E</ComboBoxItem>
+							<ComboBoxItem>F</ComboBoxItem>
+							<ComboBoxItem>G</ComboBoxItem>
+							<ComboBoxItem>H</ComboBoxItem>
+							<ComboBoxItem>I</ComboBoxItem>
+							<ComboBoxItem>J</ComboBoxItem>
+							<ComboBoxItem>K</ComboBoxItem>
+							<ComboBoxItem>L</ComboBoxItem>
+							<ComboBoxItem>M</ComboBoxItem>
+							<ComboBoxItem>N</ComboBoxItem>
+							<ComboBoxItem>O</ComboBoxItem>
+							<ComboBoxItem>P</ComboBoxItem>
+							<ComboBoxItem>Q</ComboBoxItem>
+							<ComboBoxItem>R</ComboBoxItem>
+							<ComboBoxItem>S</ComboBoxItem>
+							<ComboBoxItem>T</ComboBoxItem>
+							<ComboBoxItem>U</ComboBoxItem>
+							<ComboBoxItem>V</ComboBoxItem>
+							<ComboBoxItem>W</ComboBoxItem>
+							<ComboBoxItem>X</ComboBoxItem>
+							<ComboBoxItem>Y</ComboBoxItem>
+							<ComboBoxItem>Z</ComboBoxItem>
+						</ComboBox>
+						<ComboBox Margin="10,0" Width="60"  SelectedItem="{Binding Path=RotorPosition2}">
+							<ComboBoxItem IsSelected="True">A</ComboBoxItem>
+							<ComboBoxItem>B</ComboBoxItem>
+							<ComboBoxItem>C</ComboBoxItem>
+							<ComboBoxItem>D</ComboBoxItem>
+							<ComboBoxItem>E</ComboBoxItem>
+							<ComboBoxItem>F</ComboBoxItem>
+							<ComboBoxItem>G</ComboBoxItem>
+							<ComboBoxItem>H</ComboBoxItem>
+							<ComboBoxItem>I</ComboBoxItem>
+							<ComboBoxItem>J</ComboBoxItem>
+							<ComboBoxItem>K</ComboBoxItem>
+							<ComboBoxItem>L</ComboBoxItem>
+							<ComboBoxItem>M</ComboBoxItem>
+							<ComboBoxItem>N</ComboBoxItem>
+							<ComboBoxItem>O</ComboBoxItem>
+							<ComboBoxItem>P</ComboBoxItem>
+							<ComboBoxItem>Q</ComboBoxItem>
+							<ComboBoxItem>R</ComboBoxItem>
+							<ComboBoxItem>S</ComboBoxItem>
+							<ComboBoxItem>T</ComboBoxItem>
+							<ComboBoxItem>U</ComboBoxItem>
+							<ComboBoxItem>V</ComboBoxItem>
+							<ComboBoxItem>W</ComboBoxItem>
+							<ComboBoxItem>X</ComboBoxItem>
+							<ComboBoxItem>Y</ComboBoxItem>
+							<ComboBoxItem>Z</ComboBoxItem>
+						</ComboBox>
+						<ComboBox Margin="10,0" Width="60"  SelectedItem="{Binding Path=RotorPosition3}">
+							<ComboBoxItem IsSelected="True">A</ComboBoxItem>
+							<ComboBoxItem>B</ComboBoxItem>
+							<ComboBoxItem>C</ComboBoxItem>
+							<ComboBoxItem>D</ComboBoxItem>
+							<ComboBoxItem>E</ComboBoxItem>
+							<ComboBoxItem>F</ComboBoxItem>
+							<ComboBoxItem>G</ComboBoxItem>
+							<ComboBoxItem>H</ComboBoxItem>
+							<ComboBoxItem>I</ComboBoxItem>
+							<ComboBoxItem>J</ComboBoxItem>
+							<ComboBoxItem>K</ComboBoxItem>
+							<ComboBoxItem>L</ComboBoxItem>
+							<ComboBoxItem>M</ComboBoxItem>
+							<ComboBoxItem>N</ComboBoxItem>
+							<ComboBoxItem>O</ComboBoxItem>
+							<ComboBoxItem>P</ComboBoxItem>
+							<ComboBoxItem>Q</ComboBoxItem>
+							<ComboBoxItem>R</ComboBoxItem>
+							<ComboBoxItem>S</ComboBoxItem>
+							<ComboBoxItem>T</ComboBoxItem>
+							<ComboBoxItem>U</ComboBoxItem>
+							<ComboBoxItem>V</ComboBoxItem>
+							<ComboBoxItem>W</ComboBoxItem>
+							<ComboBoxItem>X</ComboBoxItem>
+							<ComboBoxItem>Y</ComboBoxItem>
+							<ComboBoxItem>Z</ComboBoxItem>
+						</ComboBox>
+					</StackPanel>
+
+					<Label Content="Plugboard" Margin="0,20,0,0" HorizontalAlignment="Left"  VerticalAlignment="Top" Height="24" Width="312"/>
+					<TextBox Height="130" Text="Not yet implemented" IsEnabled="False">
+						
+					</TextBox>
+					
+					
+				</StackPanel>
+			</Grid>
+		</StackPanel>
+	</Grid>
+</Window>
