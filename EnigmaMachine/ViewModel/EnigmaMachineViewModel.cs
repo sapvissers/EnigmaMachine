@@ -1,13 +1,9 @@
 ﻿using EnigmaMachine.Helpers;
 using EnigmaMachine.Helpers.EnigmaEncoder;
-using EnigmaMachine.Helpers.EnigmaEncoder.Rotors;
-using EnigmaMachine.Helpers.EnigmaEncoder.UkwTypes;
+using EnigmaMachine.View;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace EnigmaMachine.ViewModel
@@ -29,7 +25,12 @@ namespace EnigmaMachine.ViewModel
 		private string plugboard = "";
 
 		private ICommand updateCommand;
+		private ICommand steganographyEncryptCommand;
+		private ICommand steganographyDecryptCommand;
 
+		private SteganographyDecryptViewModel steganographyDecryptContext;
+		private SteganographyDecryptView steganographyDecryptView;
+		
 		public string InputText 
 		{
 			get
@@ -205,9 +206,9 @@ namespace EnigmaMachine.ViewModel
 			}
 			set
 			{
-				if (rotorPositions[0] != value)
+				if (rotorPositions[0] != value.Substring(value.Length - 1))
 				{
-					rotorPositions[0] = value;
+					rotorPositions[0] = value.Substring(value.Length - 1);
 					OnPropertyChanged("RotorPosition1");
 				}
 			}
@@ -220,9 +221,9 @@ namespace EnigmaMachine.ViewModel
 			}
 			set
 			{
-				if (rotorPositions[1] != value)
+				if (rotorPositions[1] != value.Substring(value.Length - 1))
 				{
-					rotorPositions[1] = value;
+					rotorPositions[1] = value.Substring(value.Length - 1);
 					OnPropertyChanged("RotorPosition2");
 				}
 			}
@@ -235,9 +236,9 @@ namespace EnigmaMachine.ViewModel
 			}
 			set
 			{
-				if (rotorPositions[2] != value)
+				if (rotorPositions[2] != value.Substring(value.Length - 1))
 				{
-					rotorPositions[2] = value;
+					rotorPositions[2] = value.Substring(value.Length - 1);
 					OnPropertyChanged("RotorPosition3");
 				}
 			}
@@ -285,12 +286,47 @@ namespace EnigmaMachine.ViewModel
 				return updateCommand;
 			}
 		}
+		public ICommand SteganographyEncryptCommand
+		{
+			get
+			{
+				if (steganographyEncryptCommand == null)
+				{
+					steganographyEncryptCommand = new RelayCommand(SteganographyEncrypt);
+				}
+				return steganographyEncryptCommand;
+			}
+		}
+		public ICommand SteganographyDecryptCommand
+		{
+			get
+			{
+				if (steganographyDecryptCommand == null)
+				{
+					steganographyDecryptCommand = new RelayCommand(SteganographyDecrypt);
+				}
+				return steganographyDecryptCommand;
+			}
+		}
 
 		private void Update(object parameter)
 		{
+			if (rotorPositions.Length == 0 ||
+				selectedEnigmaEncoderName == "" ||
+				selectedUwkTypeName == "")
+			{
+				return;
+			}
+
 			int[] rotorIndexes = new int[rotorPositions.Length];
 			for (int i = 0; i < rotorPositions.Length; i++ )
 			{
+				if (rotorPositions[i] == null)
+				{
+					return;
+				}
+
+
 				rotorIndexes[i] = CharacterConverter.CharacterToNumber(rotorPositions[i][0]);
 			}
 
@@ -312,7 +348,26 @@ namespace EnigmaMachine.ViewModel
 
 			IEnigmaEncoder enigmaEncoder = EnigmaEncoderFactory.NewEnigmaEncoder(selectedEnigmaEncoderName, selectedUwkTypeName, selectedRotorNames, rotorIndexes, plugboardCharacters);
 
-			OutputText = enigmaEncoder.encode(inputText);
+			OutputText = enigmaEncoder.Encode(inputText);
+		}
+
+		private void SteganographyEncrypt(object parameter)
+		{
+			SteganographyEncryptView steganographyEncryptView = new SteganographyEncryptView();
+			SteganographyEncryptViewModel steganographyEncryptContext = new SteganographyEncryptViewModel();
+			steganographyEncryptView.DataContext = steganographyEncryptContext;
+			steganographyEncryptContext.InputText = outputText;
+			steganographyEncryptView.Show();
+		}
+
+		private void SteganographyDecrypt(object parameter)
+		{
+			steganographyDecryptView = new SteganographyDecryptView();
+			steganographyDecryptContext = new SteganographyDecryptViewModel();
+			steganographyDecryptView.DataContext = steganographyDecryptContext;
+
+			steganographyDecryptContext.ExtractionCompleted += OnExtractionCompleted;
+			steganographyDecryptView.Show();
 		}
 
 		private void setAvailableRotorsAndUkwTypes(string enigmaEncoderName)
@@ -323,6 +378,19 @@ namespace EnigmaMachine.ViewModel
 			AvailableUkwTypes = enigmaEncoder.GetAvailableUkwTypes();
 
 			AvailableRotors = enigmaEncoder.GetAvailableRotors();
+		}
+
+		private void OnExtractionCompleted(string output)
+		{
+			InputText = output;
+
+			steganographyDecryptView.Closed += OnDecryptClosed;
+		}
+
+		private void OnDecryptClosed(object sender, System.EventArgs e)
+		{
+			steganographyDecryptContext.ExtractionCompleted -= OnExtractionCompleted;
+			steganographyDecryptView.Closed -= OnDecryptClosed;
 		}
 	}
 }

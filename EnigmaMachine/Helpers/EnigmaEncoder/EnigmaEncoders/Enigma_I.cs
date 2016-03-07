@@ -67,6 +67,7 @@ namespace EnigmaMachine.Helpers.EnigmaEncoder.EnigmaEncoders
 			fillRotorsAndUkwTypes();
 		}
 
+		#region getters
 		/// <summary>
 		/// Returns all available UKW Types for this encoder
 		/// </summary>
@@ -86,12 +87,54 @@ namespace EnigmaMachine.Helpers.EnigmaEncoder.EnigmaEncoders
 		}
 
 		/// <summary>
+		/// Returns UWK Type for this encoder
+		/// </summary>
+		/// <returns>UKW Type</returns>
+		public UkwType GetUkwType()
+		{
+			return ukwType;
+		}
+
+		/// <summary>
+		/// Returns selected rotors for this encoder
+		/// </summary>
+		/// <returns>Selected rotors</returns>
+		public Rotor[] GetRotors()
+		{
+			return rotors;
+		}
+
+		/// <summary>
+		/// Returns Positions of the selected rotors for this encoder
+		/// </summary>
+		/// <returns>Positions of the selected rotors</returns>
+		public int[] GetRotorPositions()
+		{
+			return rotorPositions;
+		}
+
+		/// <summary>
+		/// Returns Plugboard combinations for this encoder
+		/// </summary>
+		/// <returns>Plugboard combinations</returns>
+		public Dictionary<char, char> GetPlugboard()
+		{
+			return plugboard;
+		}
+		#endregion
+
+		/// <summary>
 		/// The entire encoding process
 		/// </summary>
 		/// <param name="input">String that needs encoding</param>
 		/// <returns>Encoded string</returns>
-		public string encode(string input)
+		public string Encode(string input)
 		{
+			if(input == null || input == "")
+			{
+				return "";
+			}
+
 			char[] inputCharacters = input.ToCharArray();
 
 			int amountOfCharacters = inputCharacters.Length;
@@ -134,7 +177,7 @@ namespace EnigmaMachine.Helpers.EnigmaEncoder.EnigmaEncoders
 
             do
 			{
-				turnNextRotor = rotors[rotorIndex].rotate();
+				turnNextRotor = rotors[rotorIndex].Rotate();
 				rotorIndex++;
             } while (turnNextRotor && rotorIndex < amountOfRotors);
 
@@ -147,7 +190,7 @@ namespace EnigmaMachine.Helpers.EnigmaEncoder.EnigmaEncoders
 			// Pass through rotors
 			for (int i = 0; i < amountOfRotors; i++)
 			{
-				outputCharacter = rotors[i].mutateForward(outputCharacter);
+				outputCharacter = rotors[i].MutateForward(outputCharacter);
             }
 
 			// Pass through UKW
@@ -156,7 +199,7 @@ namespace EnigmaMachine.Helpers.EnigmaEncoder.EnigmaEncoders
 			// Pass through rotors in reverse
 			for (int i = amountOfRotors - 1; i >= 0; i--)
 			{
-				outputCharacter = rotors[i].mutateBackward(outputCharacter);
+				outputCharacter = rotors[i].MutateBackward(outputCharacter);
 			}
 
 			// Pass through plugboard in reverse

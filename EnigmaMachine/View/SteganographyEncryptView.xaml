@@ -1,0 +1,28 @@
+﻿<Window x:Class="EnigmaMachine.View.SteganographyEncryptView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:ViewModel="clr-namespace:EnigmaMachine.ViewModel"
+        Title="Steganography Encrypter" Height="452" Width="699" WindowStartupLocation="CenterScreen" FontFamily="Courier New" ResizeMode="CanMinimize">
+	<Grid>
+		<Label Height="35" Content="Steganography Encrypter" FontSize="24" VerticalAlignment="Top"/>
+		<Grid Margin="0 30 0 0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="2*"/>
+				<ColumnDefinition Width="2*"/>
+			</Grid.ColumnDefinitions>
+		
+			<StackPanel Grid.Column="0" Margin="10">
+				<Label Content="Data to hide" HorizontalAlignment="Left"  VerticalAlignment="Top" Height="24"/>
+				<TextBox Height="214" AcceptsReturn="True" TextWrapping="Wrap" Text="{Binding InputText}" Background="#FFE2E2E2"/>
+
+				<Label Content="Image to hide the data in" HorizontalAlignment="Left"  VerticalAlignment="Top" Height="24"/>
+				<Button Height="30" Command="{Binding LoadImageCommand}">Load image</Button>
+				<Button Grid.Column="0" Margin="0 10" VerticalAlignment="Bottom" Height="30" Command="{Binding GenerateImageCommand}">Generate image</Button>
+				<ProgressBar Minimum="0" Maximum="100" Value="{Binding Progress, UpdateSourceTrigger=PropertyChanged}" Height="15" Name="progressBar" />
+			</StackPanel>
+			
+			<Image Grid.Column="1" Margin="10" Source="{Binding ImagePath}"/>
+			<TextBlock Grid.Column="1" Height="50" VerticalAlignment="Bottom" TextWrapping="Wrap" Text="{Binding ImagePath}"/>
+		</Grid>
+	</Grid>
+</Window>

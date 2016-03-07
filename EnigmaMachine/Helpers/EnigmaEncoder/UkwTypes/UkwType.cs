@@ -19,7 +19,7 @@ namespace EnigmaMachine.Helpers.EnigmaEncoder.UkwTypes
 		/// <returns>Mutated character</returns>
 		public char mutate(char input)
 		{
-			return CharacterConverter.mutateForward(input, wiring);
+			return CharacterConverter.MutateForward(input, wiring);
 		}
 	}
 }

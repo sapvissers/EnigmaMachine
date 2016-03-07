@@ -12,24 +12,29 @@ namespace EnigmaMachine.Helpers.EnigmaEncoder.Rotors
 
 		protected Dictionary<char, char> wiring = new Dictionary<char, char>();
 
+		protected Dictionary<char, char> rotatedWiring;
+		public Dictionary<char, char> RotatedWiring { get { return rotatedWiring; } }
+
 		protected char notch;
 
 		protected int position;
+		public int Position { get { return position; } }
 
 		/// <summary>
 		/// Set rotor position by char
 		/// </summary>
 		/// <param name="position"></param>
-		public void setPosition(char position)
+		public void SetPosition(char position)
 		{
 			this.position = CharacterConverter.CharacterToNumber(position);
+			rotateToPostion();
 		}
 
 		/// <summary>
 		/// Set rotor position by index
 		/// </summary>
 		/// <param name="position"></param>
-		public void setPosition(int position)
+		public void SetPosition(int position)
 		{
 			this.position = position;
 			rotateToPostion();
@@ -39,7 +44,7 @@ namespace EnigmaMachine.Helpers.EnigmaEncoder.Rotors
 		/// Rotate rotor 1 turn
 		/// </summary>
 		/// <returns>returns whether or not the next rotor should be turned</returns>
-		public bool rotate()
+		public bool Rotate()
 		{
 			position++;
 
@@ -60,9 +65,9 @@ namespace EnigmaMachine.Helpers.EnigmaEncoder.Rotors
 		/// </summary>
 		/// <param name="input">Character to be mutated</param>
 		/// <returns>Mutated character</returns>
-		public char mutateForward(char input)
+		public char MutateForward(char input)
 		{
-			return CharacterConverter.mutateForward(input, wiring);
+			return CharacterConverter.MutateForward(input, rotatedWiring);
 		}
 
 		/// <summary>
@@ -70,14 +75,14 @@ namespace EnigmaMachine.Helpers.EnigmaEncoder.Rotors
 		/// </summary>
 		/// <param name="input">Character to be mutated</param>
 		/// <returns>Mutated character</returns>
-		public char mutateBackward(char input)
+		public char MutateBackward(char input)
 		{
-			return CharacterConverter.mutateBackward(input, wiring);
+			return CharacterConverter.MutateBackward(input, rotatedWiring);
 		}
 
 		private void rotateToPostion()
 		{
-			Dictionary<char, char> originalWiring = new Dictionary<char, char>(wiring);
+			rotatedWiring = new Dictionary<char, char>(wiring);
 
 			for (int i = 0, wiringCount = wiring.Count; i < wiringCount; i++)
 			{
@@ -91,7 +96,7 @@ namespace EnigmaMachine.Helpers.EnigmaEncoder.Rotors
 				
 				char newIndex = CharacterConverter.NumberToCharacter(i + 1);
 
-				wiring[newIndex] = originalWiring[originalIndex];
+				rotatedWiring[newIndex] = wiring[originalIndex];
 			}
         }
 	}

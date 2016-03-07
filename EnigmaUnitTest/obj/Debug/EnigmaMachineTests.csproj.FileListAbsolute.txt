@@ -1,0 +1,7 @@
+D:\VisualStudio\EnigmaMachine\EnigmaMachine\EnigmaUnitTest\bin\Debug\EnigmaUnitTest.dll
+D:\VisualStudio\EnigmaMachine\EnigmaMachine\EnigmaUnitTest\bin\Debug\EnigmaUnitTest.pdb
+D:\VisualStudio\EnigmaMachine\EnigmaMachine\EnigmaUnitTest\bin\Debug\EnigmaMachine.exe
+D:\VisualStudio\EnigmaMachine\EnigmaMachine\EnigmaUnitTest\bin\Debug\EnigmaMachine.pdb
+D:\VisualStudio\EnigmaMachine\EnigmaMachine\EnigmaUnitTest\obj\Debug\EnigmaMachineTests.csprojResolveAssemblyReference.cache
+D:\VisualStudio\EnigmaMachine\EnigmaMachine\EnigmaUnitTest\obj\Debug\EnigmaUnitTest.dll
+D:\VisualStudio\EnigmaMachine\EnigmaMachine\EnigmaUnitTest\obj\Debug\EnigmaUnitTest.pdb

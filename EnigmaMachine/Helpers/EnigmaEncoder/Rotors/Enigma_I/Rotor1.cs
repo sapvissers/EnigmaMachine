@@ -38,7 +38,7 @@ namespace EnigmaMachine.Helpers.EnigmaEncoder.Rotors.Enigma_I
 			wiring.Add('X', 'R');
 			wiring.Add('Y', 'C');
 			wiring.Add('Z', 'J');
-
+			
 		notch = 'Y';
 		}
 	}

@@ -53,8 +53,30 @@ namespace EnigmaMachine.Helpers.EnigmaEncoder
 			}
 
 			// Select UKW Type
+			UkwType ukwType = selectUkwType(uwkTypeName);
+
+			// Select rotors
+			List<Rotor> rotorList = new List<Rotor>();
+			addRotorsToRotorList(ref rotorList, rotorNames);
+			Rotor[] rotors = rotorList.ToArray();
+
+			// Set starting positions of the rotors
+			for (int i = 0, amountOfRotors = rotors.Length; i < amountOfRotors; i++)
+			{
+				rotors[i].SetPosition(rotorPositions[i]);
+			}
+
+			// Select Enigma Encoder
+			IEnigmaEncoder enigmaEncoder = selectEnigmaEncoder(enigmaEncoderType, ukwType, rotors, rotorPositions, plugboard);
+
+			return enigmaEncoder;
+		}
+
+		private static UkwType selectUkwType(string uwkTypeName)
+		{
 			UkwType ukwType = null;
-			switch(uwkTypeName)
+
+			switch (uwkTypeName)
 			{
 				case "UKW-A":
 					ukwType = new UkwA();
@@ -66,19 +88,21 @@ namespace EnigmaMachine.Helpers.EnigmaEncoder
 					ukwType = new UkwC();
 					break;
 				default:
-					ukwType = new UkwA();
-					break;
+					throw new ArgumentException("Unknown UKW type: " + uwkTypeName);
 			}
 
-			// Select rotors
-			List<Rotor> rotorList = new List<Rotor>();
-			for(int i = 0; i < rotorNames.Length; i++)
+			return ukwType;
+		}
+
+		private static void addRotorsToRotorList(ref List<Rotor> rotorList, string[] rotorNames)
+		{
+			for (int i = 0; i < rotorNames.Length; i++)
 			{
 				switch (rotorNames[i])
 				{
 					case "I":
 						rotorList.Add(new Rotor1());
-                        break;
+						break;
 					case "II":
 						rotorList.Add(new Rotor2());
 						break;
@@ -91,23 +115,24 @@ namespace EnigmaMachine.Helpers.EnigmaEncoder
 					case "V":
 						rotorList.Add(new Rotor5());
 						break;
+					default:
+						throw new ArgumentException("Unknown rotor name: " + rotorNames[i]);
 				}
 			}
-			Rotor[] rotors = rotorList.ToArray();
+		}
 
-			// Set starting positions of the rotors
-			for (int i = 0, amountOfRotors = rotors.Length; i < amountOfRotors; i++)
-			{
-				rotors[i].setPosition(rotorPositions[i]);
-			}
-
-			// Select Enigma Encoder
+		private static IEnigmaEncoder selectEnigmaEncoder(string enigmaEncoderType, UkwType ukwType, Rotor[] rotors, 
+			int[] rotorPositions, Dictionary<char, char>plugboard)
+		{
 			IEnigmaEncoder enigmaEncoder = null;
+
 			switch (enigmaEncoderType)
 			{
 				case "Enigma_I":
 					enigmaEncoder = new Enigma_I(ukwType, rotors, rotorPositions, plugboard);
 					break;
+				default:
+					throw new ArgumentException("Unknown Enigma encoder type: " + enigmaEncoderType);
 			}
 
 			return enigmaEncoder;

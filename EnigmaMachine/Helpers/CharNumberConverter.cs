@@ -19,6 +19,11 @@ namespace EnigmaMachine.Helpers
 		/// <returns>Corresponding index belonging to the input character</returns>
 		public static int CharacterToNumber(char character)
 		{
+			if (!Char.IsLetter(character))
+			{
+				throw new ArgumentOutOfRangeException("character must be a letter");
+			}
+
 			int index = char.ToUpper(character) - 64;
 
 			return index;
@@ -32,6 +37,12 @@ namespace EnigmaMachine.Helpers
 		/// <returns>Corresponding character belonging to the input index</returns>
 		public static char NumberToCharacter(int index)
 		{
+
+			if (index <= 0 || index > 26)
+			{
+				throw new ArgumentOutOfRangeException("index must be between 1 and 26");
+			}
+
 			char character = (char)('A' + (char)((index - 1) % 26));
 
 			return character;
@@ -43,11 +54,13 @@ namespace EnigmaMachine.Helpers
 		/// <param name="input">Character that needs to be mutated</param>
 		/// <param name="wiring">Wiring through which the character will pass</param>
 		/// <returns>Mutated character</returns>
-		public static char mutateForward(char input, Dictionary<char, char> wiring)
+		public static char MutateForward(char input, Dictionary<char, char> wiring)
 		{
+			input = char.ToUpper(input);
+
 			if (!wiring.ContainsKey(input))
 			{
-				throw new Exception("No wiring found for the character " + input);
+				return input;
 			}
 
 			char output = wiring[input];
@@ -61,11 +74,13 @@ namespace EnigmaMachine.Helpers
 		/// <param name="input">Character that needs to be mutated</param>
 		/// <param name="wiring">Wiring through which the character will pass</param>
 		/// <returns>Mutated character</returns>
-		public static char mutateBackward(char input, Dictionary<char, char> wiring)
+		public static char MutateBackward(char input, Dictionary<char, char> wiring)
 		{
+			input = char.ToUpper(input);
+
 			if (!wiring.ContainsValue(input))
 			{
-				throw new Exception("No wiring found for the character " + input);
+				return input;
 			}
 
 			char output = wiring.FirstOrDefault(x => x.Value == input).Key;

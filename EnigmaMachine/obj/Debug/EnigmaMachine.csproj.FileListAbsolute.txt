@@ -26,3 +26,9 @@ D:\EnigmaMachine\EnigmaMachine\obj\Debug\View\EnigmaMachineView.baml
 D:\EnigmaMachine\EnigmaMachine\obj\Debug\EnigmaMachine.g.resources
 D:\EnigmaMachine\EnigmaMachine\obj\Debug\EnigmaMachine.Properties.Resources.resources
 D:\EnigmaMachine\EnigmaMachine\obj\Debug\EnigmaMachine.csproj.GenerateResource.Cache
+D:\VisualStudio\EnigmaMachine\EnigmaMachine\EnigmaMachine\obj\Debug\View\SteganographyEncryptView.g.cs
+D:\VisualStudio\EnigmaMachine\EnigmaMachine\EnigmaMachine\obj\Debug\View\SteganographyEncryptView.baml
+D:\VisualStudio\EnigmaMachine\EnigmaMachine\EnigmaMachine\obj\Debug\View\SteganographyDecryptView.g.cs
+D:\VisualStudio\EnigmaMachine\EnigmaMachine\EnigmaMachine\obj\Debug\View\SteganographyDecryptView.baml
+D:\VisualStudio\EnigmaMachine\EnigmaMachine\EnigmaMachine\obj\Debug\View\ImagePopupView.g.cs
+D:\VisualStudio\EnigmaMachine\EnigmaMachine\EnigmaMachine\obj\Debug\View\ImagePopupView.baml

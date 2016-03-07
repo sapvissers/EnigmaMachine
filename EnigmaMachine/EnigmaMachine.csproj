@@ -36,6 +36,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -63,13 +65,27 @@
     <Compile Include="Helpers\EnigmaEncoder\Rotors\Enigma_I\Rotor4.cs" />
     <Compile Include="Helpers\EnigmaEncoder\Rotors\Enigma_I\Rotor5.cs" />
     <Compile Include="Helpers\EnigmaEncoder\Rotors\Rotor.cs" />
+    <Compile Include="Helpers\EnigmaEncoder\Rotors\RotorTester.cs" />
     <Compile Include="Helpers\EnigmaEncoder\UkwTypes\Enigma_I\UkwA.cs" />
     <Compile Include="Helpers\EnigmaEncoder\UkwTypes\Enigma_I\UkwB.cs" />
     <Compile Include="Helpers\EnigmaEncoder\UkwTypes\Enigma_I\UkwC.cs" />
     <Compile Include="Helpers\EnigmaEncoder\UkwTypes\UkwType.cs" />
     <Compile Include="Helpers\ObservableObject.cs" />
     <Compile Include="Helpers\RelayCommand.cs" />
+    <Compile Include="Helpers\Steganography\SteganographyHelper.cs" />
+    <Compile Include="ViewModel\ImagePopupViewModel.cs" />
+    <Compile Include="ViewModel\SteganographyDecryptViewModel.cs" />
+    <Compile Include="ViewModel\SteganographyEncryptViewModel.cs" />
     <Compile Include="ViewModel\EnigmaMachineViewModel.cs" />
+    <Compile Include="View\SteganographyDecryptView.xaml.cs">
+      <DependentUpon>SteganographyDecryptView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ImagePopupView.xaml.cs">
+      <DependentUpon>ImagePopupView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SteganographyEncryptView.xaml.cs">
+      <DependentUpon>SteganographyEncryptView.xaml</DependentUpon>
+    </Compile>
     <Page Include="View\EnigmaMachineView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -82,6 +98,18 @@
       <DependentUpon>EnigmaMachineView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\SteganographyDecryptView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ImagePopupView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\SteganographyEncryptView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -110,6 +138,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

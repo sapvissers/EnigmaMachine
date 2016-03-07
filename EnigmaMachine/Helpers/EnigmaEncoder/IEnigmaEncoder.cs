@@ -16,7 +16,11 @@ namespace EnigmaMachine.Helpers.EnigmaEncoder
 	{
 		ObservableCollection<string> GetAvailableUkwTypes();
 		ObservableCollection<string> GetAvailableRotors();
+		UkwType GetUkwType();
+		Rotor[] GetRotors();
+		int[] GetRotorPositions();
+		Dictionary<char, char> GetPlugboard();
 
-		string encode(string input);
+		string Encode(string input);
 	}
 }

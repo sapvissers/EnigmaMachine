@@ -1,0 +1,11 @@
+﻿<Window x:Class="EnigmaMachine.View.ImagePopupView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:ViewModel="clr-namespace:EnigmaMachine.ViewModel"
+        Title="Processed image" Height="436" Width="394" WindowStartupLocation="CenterScreen" FontFamily="Courier New" ResizeMode="CanMinimize">
+	<Grid>
+		<Label Height="25" VerticalAlignment="Top">Processed image:</Label>
+		<Image Margin="0,25,0,50" Source="{Binding ProcessedImageSource}"/>
+		<Button Height="50" VerticalAlignment="Bottom" Command="{Binding SaveImageCommand}">Save image</Button>
+	</Grid>
+</Window>
