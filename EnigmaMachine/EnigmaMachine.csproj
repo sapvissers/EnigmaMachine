@@ -65,7 +65,6 @@
     <Compile Include="Helpers\EnigmaEncoder\Rotors\Enigma_I\Rotor4.cs" />
     <Compile Include="Helpers\EnigmaEncoder\Rotors\Enigma_I\Rotor5.cs" />
     <Compile Include="Helpers\EnigmaEncoder\Rotors\Rotor.cs" />
-    <Compile Include="Helpers\EnigmaEncoder\Rotors\RotorTester.cs" />
     <Compile Include="Helpers\EnigmaEncoder\UkwTypes\Enigma_I\UkwA.cs" />
     <Compile Include="Helpers\EnigmaEncoder\UkwTypes\Enigma_I\UkwB.cs" />
     <Compile Include="Helpers\EnigmaEncoder\UkwTypes\Enigma_I\UkwC.cs" />

@@ -1,273 +1,283 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace EnigmaMachine.Helpers.Steganography
 {
-	public static class SteganographyHelper
-	{
-		const string header = "0000000011111111";
-		const string footer = "0000000000000000";
+    public static class SteganographyHelper
+    {
+        const string header = "0000000011111111";
+        const string footer = "0000000000000000";
 
-		public delegate void UpdateProgressEventHandler(double progress);
-		public static event UpdateProgressEventHandler UpdateProgress;
+        public delegate void UpdateProgressEventHandler(double progress);
+        public static event UpdateProgressEventHandler UpdateProgress;
 
-		/// <summary>
-		/// Generates image with hidden text in the least significant bits of the pixel information
-		/// </summary>
-		/// <param name="inputText">Text to hide</param>
-		/// <param name="imagePath">Image to hide the text in</param>
-		/// <returns></returns>
-		public static Bitmap GenerateImage(string inputText, string imagePath)
-		{
-			if (inputText == "" || inputText == null)
-			{
-				System.Windows.MessageBox.Show("Please insert text to complete this process.");
-				return null;
-			}
+        private delegate bool PixelDataFunction(ref Bitmap image, ref int binaryTextIndex, ref string binaryMessage, ref string binaryColor);
 
-			if (imagePath == "" || imagePath == null || !File.Exists(imagePath))
-			{
-				System.Windows.MessageBox.Show("Please select an image to complete this process.");
-				return null;
-			}
+        /// <summary>
+        /// Generates image with hidden text in the least significant bits of the pixel information
+        /// </summary>
+        /// <param name="inputText">Text to hide</param>
+        /// <param name="imagePath">Image to hide the text in</param>
+        /// <returns></returns>
+        public static Bitmap GenerateImage(string inputText, string imagePath)
+        {
+            if (String.IsNullOrEmpty(inputText))
+            {
+                System.Windows.MessageBox.Show("Please insert text to complete this process.");
+                return null;
+            }
 
-			// Convert input text to binary string
-			string binaryString = prepairInputText(inputText);
-			int binaryTextIndex = 0;
+            if (String.IsNullOrEmpty(imagePath) || !File.Exists(imagePath))
+            {
+                System.Windows.MessageBox.Show("Please select an image to complete this process.");
+                return null;
+            }
 
-			// Generate bitmap image
-			Bitmap image = (Bitmap)Image.FromFile(imagePath);
+            // Convert input text to binary string
+            string binaryMessage = prepairInputText(inputText);
+            int binaryMessageIndex = 0;
 
-			int amountOfPixelsNeeded = calculateAmountOfPixelsNeeded(inputText);
-			if ((image.Height * image.Width) < amountOfPixelsNeeded)
-			{
-				System.Windows.MessageBox.Show(String.Format("Amount of data doesn't fit inside this image, you need at least {0} pixels", amountOfPixelsNeeded));
-				return null;
-			}
+            // Generate bitmap image
+            Bitmap image = (Bitmap)Image.FromFile(imagePath);
 
-			UpdateProgress(0);
+            int amountOfPixelsNeeded = calculateAmountOfPixelsNeeded(inputText);
+            if ((image.Height * image.Width) < amountOfPixelsNeeded)
+            {
+                string message = String.Format("Amount of data doesn't fit inside this image, you need at least {0} pixels", amountOfPixelsNeeded);
+                System.Windows.MessageBox.Show(message);
+                return null;
+            }
 
-			// Loop over y-pixels
-			for (int h = 0, imageHeight = image.Height; h < imageHeight; h++)
-			{
-				// Loop over x-pixels
-				for (int w = 0, imageWidth = image.Width; w < imageWidth; w++)
-				{
-					// Construct array of binary RGB values
-					Color pixel = image.GetPixel(w, h);
-					string[] binaryPixel = new string[]{
-						getBinaryStringFromColor(pixel.R),
-						getBinaryStringFromColor(pixel.G),
-						getBinaryStringFromColor(pixel.B)
-					};
+            UpdateProgress(0);
 
+            loopOverAllPixels(ref image, ref binaryMessageIndex, ref binaryMessage, insertDataInImage);
 
-					// Loop over RGB colors individualy
-					for (int i = 0, amountOfColors = binaryPixel.Length; i < amountOfColors; i++)
-					{
-						binaryPixel[i] = binaryPixel[i].Remove(binaryPixel[i].Length - 1);
-						binaryPixel[i] += binaryString[binaryTextIndex];
+            return image;
+        }
 
-						binaryTextIndex++;
+        /// <summary>
+        /// Extracts hiden text from an image
+        /// </summary>
+        /// <param name="imagePath">Path to the image</param>
+        /// <returns>String that was extracted from the image</returns>
+        public static string ExtractTextFromImage(string imagePath)
+        {
+            if (String.IsNullOrEmpty(imagePath) || !File.Exists(imagePath))
+            {
+                System.Windows.MessageBox.Show("Please select an image to complete this process.");
+                return null;
+            }
 
-						UpdateProgress(binaryTextIndex * 100 / binaryString.Length);
+            // Generate bitmap image
+            Bitmap image = (Bitmap)Image.FromFile(imagePath);
 
-						if (binaryTextIndex >= binaryString.Length)
-						{
-							break;
-						}
-					}
+            string binaryMessage = "";
+            int binaryMessageIndex = 0;
 
-					// Convert colors to pixel
-					Color mutatedPixel = Color.FromArgb(getColorFromBinaryString(binaryPixel[0]),
-														getColorFromBinaryString(binaryPixel[1]),
-														getColorFromBinaryString(binaryPixel[2]));
+            UpdateProgress(0);
 
-					image.SetPixel(w, h, mutatedPixel);
+            loopOverAllPixels(ref image, ref binaryMessageIndex, ref binaryMessage, extractDataFromImage);
 
-					if (binaryTextIndex >= binaryString.Length)
-					{
-						break;
-					}
-				}
+            int lengthOfMessageWithoutHeaderAndFooter = binaryMessage.Length - header.Length - footer.Length;
+            string binaryOutput = binaryMessage.Substring(header.Length, lengthOfMessageWithoutHeaderAndFooter);
 
-				if (binaryTextIndex >= binaryString.Length)
-				{
-					break;
-				}
-			}
+            byte[] byteOutput = convertBinaryStringIntoByteArray(binaryOutput);
 
-			return image;
-		}
+            string output = Encoding.UTF8.GetString(byteOutput);
 
-		/// <summary>
-		/// Extracts hiden text from an image
-		/// </summary>
-		/// <param name="imagePath">Path to the image</param>
-		/// <returns>String that was extracted from the image</returns>
-		public static string ExtractTextFromImage(string imagePath)
-		{
-			if (imagePath == "" || imagePath == null || !File.Exists(imagePath))
-			{
-				System.Windows.MessageBox.Show("Please select an image to complete this process.");
-				return null;
-			}
+            UpdateProgress(100);
 
-			// Generate bitmap image
-			Bitmap image = (Bitmap)Image.FromFile(imagePath);
+            return output;
+        }
 
-			bool stopSearchingForData = false;
+        #region Loop over and manipulate / extract data from pixels
+        private static void loopOverAllPixels(ref Bitmap image, ref int binaryMessageIndex, ref string binaryMessage, PixelDataFunction pixelDataFunction)
+        {
+            // Loop over vertical pixels
+            for (int h = 0, imageHeight = image.Height; h < imageHeight; h++)
+            {
+                if (loopOverHorizontalPixels(ref image, h, ref binaryMessageIndex, ref binaryMessage, pixelDataFunction))
+                {
+                    break;
+                }
+            }
+        }
 
-			string binaryMessage = "";
+        private static bool loopOverHorizontalPixels(ref Bitmap image, int height, ref int binaryMessageIndex, ref string binaryMessage, PixelDataFunction pixelDataFunction)
+        {
+            bool finishedProcess = false;
 
-			UpdateProgress(0);
+            // Loop over horizontal pixels
+            for (int w = 0, imageWidth = image.Width; w < imageWidth; w++)
+            {
+                finishedProcess = loopOverColors(ref image, height, w, ref binaryMessageIndex, ref binaryMessage, pixelDataFunction);
 
-			// Loop over y-pixels
-			for (int h = 0, imageHeight = image.Height; h < imageHeight; h++)
-			{
-				// Loop over x-pixels
-				for (int w = 0, imageWidth = image.Width; w < imageWidth; w++)
-				{
-					// Construct array of binary RGB values
-					Color pixel = image.GetPixel(w, h);
-					string[] binaryPixel = new string[]{
-						getBinaryStringFromColor(pixel.R),
-						getBinaryStringFromColor(pixel.G),
-						getBinaryStringFromColor(pixel.B)
-					};
+                if (finishedProcess)
+                {
+                    break;
+                }
+            }
 
+            return finishedProcess;
+        }
 
-					// Loop over RGB colors individualy
-					for (int i = 0, amountOfColors = binaryPixel.Length; i < amountOfColors; i++)
-					{
-						string binaryColorInfo = binaryPixel[i];
+        private static bool loopOverColors(ref Bitmap image, int height, int width, ref int binaryMessageIndex, ref string binaryMessage, PixelDataFunction pixelDataFunction)
+        {
+            bool finishedProcess = false;
 
-						// Add last digit of the binary color information to the binary message string
-						binaryMessage += binaryColorInfo[binaryColorInfo.Length - 1];
+            // Construct array of binary RGB values
+            Color pixel = image.GetPixel(width, height);
+            string[] binaryPixel = getBinaryPixel(pixel);
 
-						// Check if required header exist, if not, we can't extract any information from this image
-						if (binaryMessage.Length == header.Length && 
-							binaryMessage != header)
-						{
-							System.Windows.MessageBox.Show("No hiden data was found in this image.");
-							
-							return "";
-						}
+            // Loop over RGB colors individualy
+            for (int i = 0, amountOfColors = binaryPixel.Length; i < amountOfColors; i++)
+            {
+                finishedProcess = pixelDataFunction(ref image, ref binaryMessageIndex, ref binaryMessage, ref binaryPixel[i]);
 
-						// Check if we found the footer in the data, which means we reached the end of the hiden data
-						if (binaryMessage.Length > (header.Length + footer.Length) &&
-							binaryMessage.Length % 8 != 0 && 
-							binaryMessage.Substring(binaryMessage.Length -  footer.Length) == footer)
-						{
-							
-							stopSearchingForData = true;
-						}
+                if (finishedProcess)
+                {
+                    break;
+                }
+            }
 
-						if (stopSearchingForData)
-						{
-							break;
-						}
-					}
+            // Convert colors to pixel
+            Color mutatedPixel = Color.FromArgb(getColorFromBinaryString(binaryPixel[0]),
+                                                getColorFromBinaryString(binaryPixel[1]),
+                                                getColorFromBinaryString(binaryPixel[2]));
 
-					if (stopSearchingForData)
-					{
-						break;
-					}
-				}
+            image.SetPixel(width, height, mutatedPixel);
 
-				if (stopSearchingForData)
-				{
-					UpdateProgress(100);
-					break;
-				}
-			}
+            return finishedProcess;
+        }
 
-			int lengthOfMessageWithoutHeaderAndFooter = binaryMessage.Length - header.Length - footer.Length;
-			string binaryOutput = binaryMessage.Substring(header.Length, lengthOfMessageWithoutHeaderAndFooter);
+        private static bool insertDataInImage(ref Bitmap image, ref int binaryTextIndex, ref string binaryMessage, ref string binaryColor)
+        {
+            bool finishedProcess = false;
 
-			byte[] byteOutput = convertBinaryStringIntoByteArray(binaryOutput);
+            binaryColor = binaryColor.Remove(binaryColor.Length - 1);
+            binaryColor += binaryMessage[binaryTextIndex];
 
-			string output = Encoding.UTF8.GetString(byteOutput);
+            binaryTextIndex++;
 
-			return output;
-		}
+            UpdateProgress(binaryTextIndex * 100 / binaryMessage.Length);
 
-		private static string prepairInputText(string inputText)
-		{
-			// Convert input text to binary array
-			byte[] binaryText = Encoding.UTF8.GetBytes(inputText);
+            finishedProcess = (binaryTextIndex >= binaryMessage.Length);
 
-			string binaryString = header;
+            return finishedProcess;
+        }
 
-			UpdateProgress(0);
+        private static bool extractDataFromImage(ref Bitmap image, ref int binaryTextIndex, ref string binaryMessage, ref string binaryColor)
+        {
+            bool finishedProcess = false;
 
-			for (int i = 0, binaryLength = binaryText.Length; i < binaryLength; i++)
-			{
-				binaryString += Convert.ToString(binaryText[i], 2).ToString().PadLeft(8, '0');
+            // Add last digit of the binary color information to the binary message string
+            binaryMessage += binaryColor[binaryColor.Length - 1];
 
-				UpdateProgress(i * 100 / binaryLength);
-			}
+            // Check if required header exist, if not, we can't extract any information from this image
+            if (binaryMessage.Length == header.Length &&
+                binaryMessage != header)
+            {
+                System.Windows.MessageBox.Show("No hiden data was found in this image.");
 
-			binaryString += footer;
+                binaryMessage = "";
+                finishedProcess = true;
+            }
 
-			return binaryString;
-		}
+            // Check if we found the footer in the data, which means we reached the end of the hiden data
+            if (binaryMessage.Length > (header.Length + footer.Length) &&
+                binaryMessage.Length % 8 != 0 &&
+                binaryMessage.Substring(binaryMessage.Length - footer.Length) == footer)
+            {
+                finishedProcess = true;
+            }
 
-		private static string getBinaryStringFromColor (int color)
-		{
-			string result = Convert.ToString(color, 2);
-			result = result.ToString().PadLeft(8, '0');
+            return finishedProcess;
+        }
+        #endregion
 
-			return result;
-		}
+        private static string prepairInputText(string inputText)
+        {
+            // Convert input text to binary array
+            byte[] binaryText = Encoding.UTF8.GetBytes(inputText);
 
-		private static int getColorFromBinaryString(string binaryString)
-		{
-			int result = 0;
+            string binaryString = header;
 
-			result = Convert.ToInt32(binaryString, 2);
-			return result;
-		}
+            UpdateProgress(0);
 
-		private static byte[] convertBinaryStringIntoByteArray(string binaryString)
-		{
-			byte[] outputBytes = new byte[binaryString.Length / 8];
+            for (int i = 0, binaryLength = binaryText.Length; i < binaryLength; i++)
+            {
+                binaryString += Convert.ToString(binaryText[i], 2).ToString().PadLeft(8, '0');
 
-			UpdateProgress(0);
+                UpdateProgress(i * 100 / binaryLength);
+            }
 
-			// Loop over every byte to fill it with data
-			for (int i = 0, binaryCount = outputBytes.Length; i < binaryCount; i++)
-			{
-				outputBytes[i] = Convert.ToByte(binaryString.Substring(8 * i, 8), 2);
+            binaryString += footer;
 
-				UpdateProgress(i * 100 / binaryCount);
-			}
+            return binaryString;
+        }
 
-			return outputBytes;
-		}
+        private static string getBinaryStringFromColor(int color)
+        {
+            string result = Convert.ToString(color, 2);
+            result = result.ToString().PadLeft(8, '0');
 
-		private static int calculateAmountOfPixelsNeeded(string data)
-		{
-			/// P: amount of pixels
-			/// C: amount of characters
-			/// W: image width
-			/// H: image height
-			/// 
-			/// P = H * W
-			/// C = ((3 * P) - 32) / 8
-			/// P = ((8 * C) - 32) / 3
+            return result;
+        }
 
-			int amountOfCharacters = data.Length;
+        private static int getColorFromBinaryString(string binaryString)
+        {
+            int result = 0;
 
-			double amountOfPixels = ((8 * amountOfCharacters) - 32) / 3;
+            result = Convert.ToInt32(binaryString, 2);
+            return result;
+        }
 
-			return (int)Math.Ceiling(amountOfPixels);
-		}
-	}
+        private static int calculateAmountOfPixelsNeeded(string data)
+        {
+            /// P: amount of pixels
+            /// C: amount of characters
+            /// W: image width
+            /// H: image height
+            /// 
+            /// P = H * W
+            /// C = ((3 * P) - 32) / 8
+            /// P = ((8 * C) - 32) / 3
+
+            int amountOfCharacters = data.Length;
+
+            double amountOfPixels = ((8 * amountOfCharacters) - 32) / 3;
+
+            return (int)Math.Ceiling(amountOfPixels);
+        }
+
+        private static byte[] convertBinaryStringIntoByteArray(string binaryString)
+        {
+            byte[] outputBytes = new byte[binaryString.Length / 8];
+
+            UpdateProgress(0);
+
+            // Loop over every byte to fill it with data
+            for (int i = 0, binaryCount = outputBytes.Length; i < binaryCount; i++)
+            {
+                outputBytes[i] = Convert.ToByte(binaryString.Substring(8 * i, 8), 2);
+
+                UpdateProgress(i * 100 / binaryCount);
+            }
+
+            return outputBytes;
+        }
+
+        private static string[] getBinaryPixel(Color pixel)
+        {
+            string[] binaryPixel = new string[]{
+                getBinaryStringFromColor(pixel.R),
+                getBinaryStringFromColor(pixel.G),
+                getBinaryStringFromColor(pixel.B)
+            };
+
+            return binaryPixel;
+        }
+    }
 }

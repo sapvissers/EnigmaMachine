@@ -32,3 +32,9 @@ D:\VisualStudio\EnigmaMachine\EnigmaMachine\EnigmaMachine\obj\Debug\View\Stegano
 D:\VisualStudio\EnigmaMachine\EnigmaMachine\EnigmaMachine\obj\Debug\View\SteganographyDecryptView.baml
 D:\VisualStudio\EnigmaMachine\EnigmaMachine\EnigmaMachine\obj\Debug\View\ImagePopupView.g.cs
 D:\VisualStudio\EnigmaMachine\EnigmaMachine\EnigmaMachine\obj\Debug\View\ImagePopupView.baml
+D:\EnigmaMachine\EnigmaMachine\obj\Debug\View\SteganographyDecryptView.g.cs
+D:\EnigmaMachine\EnigmaMachine\obj\Debug\View\ImagePopupView.g.cs
+D:\EnigmaMachine\EnigmaMachine\obj\Debug\View\SteganographyEncryptView.g.cs
+D:\EnigmaMachine\EnigmaMachine\obj\Debug\View\SteganographyDecryptView.baml
+D:\EnigmaMachine\EnigmaMachine\obj\Debug\View\ImagePopupView.baml
+D:\EnigmaMachine\EnigmaMachine\obj\Debug\View\SteganographyEncryptView.baml

@@ -10,143 +10,143 @@ using EnigmaMachine.Helpers.EnigmaEncoder.UkwTypes.Enigma_I;
 
 namespace EnigmaUnitTest.UnitTests.Helpers.EnigmaEncoder.EnigmaEncoders
 {
-	[TestClass]
-	public class Enigma_ITest
-	{
-		#region Encode
-		[TestMethod]
-		public void Encode_InsertNormalString_ReturnEncodedString()
-		{
-			// Arrange
-			string input = "aaa";
+    [TestClass]
+    public class Enigma_ITest
+    {
+        #region Encode
+        [TestMethod]
+        public void Encode_InsertNormalString_ReturnEncodedString()
+        {
+            // Arrange
+            string input = "aaa";
 
-			///  |R-1|R-2|R-3|U-A|R-3|R-2|R-1|
-			///1 A---K---L---V---I---Q---Q---G
-			///2 A---M---W---U---P---H---L---C
-			///3 A---F---I---R---N---N---T---I
-			string expectedOutput = "GCI";
+            ///  |R-1|R-2|R-3|U-A|R-3|R-2|R-1|
+            ///1 A---K---L---V---I---Q---Q---G
+            ///2 A---M---W---U---P---H---L---C
+            ///3 A---F---I---R---N---N---T---I
+            string expectedOutput = "GCI";
 
-			UkwType ukwType = new UkwA();
-			Rotor[] rotors = new Rotor[] { new Rotor1(), new Rotor2(), new Rotor3() };
-			int[] rotorPositions = new int[] { 1, 1, 1 }; // A, A, A
+            UkwType ukwType = new UkwA();
+            Rotor[] rotors = new Rotor[] { new Rotor1(), new Rotor2(), new Rotor3() };
+            int[] rotorPositions = new int[] { 1, 1, 1 }; // A, A, A
 
-			for (int i = 0, amountOfRotors = rotors.Length; i < amountOfRotors; i++)
-			{
-				rotors[i].SetPosition(rotorPositions[i]);
-			}
+            for (int i = 0, amountOfRotors = rotors.Length; i < amountOfRotors; i++)
+            {
+                rotors[i].SetPosition(rotorPositions[i]);
+            }
 
-			Dictionary<char, char> plugboard = new Dictionary<char, char>();
-			IEnigmaEncoder encoder = new Enigma_I(ukwType, rotors, rotorPositions, plugboard);
+            Dictionary<char, char> plugboard = new Dictionary<char, char>();
+            IEnigmaEncoder encoder = new Enigma_I(ukwType, rotors, rotorPositions, plugboard);
 
-			// Act
-			string output = encoder.Encode(input);
-		
-			// Assert
-			Assert.AreEqual(expectedOutput, output);
-		}
+            // Act
+            string output = encoder.Encode(input);
 
-		[TestMethod]
-		public void Encode_InsertEncodedString_ReturnDecodedString()
-		{
-			// Arrange
-			string input = "gci";
+            // Assert
+            Assert.AreEqual(expectedOutput, output);
+        }
 
-			///  |R-1|R-2|R-3|U-A|R-3|R-2|R-1|
-			///1 A---K---L---V---I---Q---Q---G
-			///2 A---M---W---U---P---H---L---C
-			///3 A---F---I---R---N---N---T---I
-			string expectedOutput = "AAA";
+        [TestMethod]
+        public void Encode_InsertEncodedString_ReturnDecodedString()
+        {
+            // Arrange
+            string input = "gci";
 
-			UkwType ukwType = new UkwA();
-			Rotor[] rotors = new Rotor[] { new Rotor1(), new Rotor2(), new Rotor3() };
-			int[] rotorPositions = new int[] { 1, 1, 1 }; // A, A, A
+            ///  |R-1|R-2|R-3|U-A|R-3|R-2|R-1|
+            ///1 A---K---L---V---I---Q---Q---G
+            ///2 A---M---W---U---P---H---L---C
+            ///3 A---F---I---R---N---N---T---I
+            string expectedOutput = "AAA";
 
-			for (int i = 0, amountOfRotors = rotors.Length; i < amountOfRotors; i++)
-			{
-				rotors[i].SetPosition(rotorPositions[i]);
-			}
+            UkwType ukwType = new UkwA();
+            Rotor[] rotors = new Rotor[] { new Rotor1(), new Rotor2(), new Rotor3() };
+            int[] rotorPositions = new int[] { 1, 1, 1 }; // A, A, A
 
-			Dictionary<char, char> plugboard = new Dictionary<char, char>();
-			IEnigmaEncoder encoder = new Enigma_I(ukwType, rotors, rotorPositions, plugboard);
+            for (int i = 0, amountOfRotors = rotors.Length; i < amountOfRotors; i++)
+            {
+                rotors[i].SetPosition(rotorPositions[i]);
+            }
 
-			// Act
-			string output = encoder.Encode(input);
+            Dictionary<char, char> plugboard = new Dictionary<char, char>();
+            IEnigmaEncoder encoder = new Enigma_I(ukwType, rotors, rotorPositions, plugboard);
 
-			// Assert
-			Assert.AreEqual(expectedOutput, output);
-		}
+            // Act
+            string output = encoder.Encode(input);
 
-		[TestMethod]
-		public void Encode_EncodeMessageWithPlugboardSetup_ReturnEncodedString()
-		{
-			// Arrange
-			string input = "aaa";
+            // Assert
+            Assert.AreEqual(expectedOutput, output);
+        }
 
-			///  |PLU|R-1|R-2|R-3|U-A|R-3|R-2|R-1|PLU|
-			///1 A---D---L---H---P---U---W---M---B---B
-			///2 A---D---G---R---W---K---U---H---N---L
-			///3 A---D---D---K---X---H---D---C---V---V
-			string expectedOutput = "BLV";
+        [TestMethod]
+        public void Encode_EncodeMessageWithPlugboardSetup_ReturnEncodedString()
+        {
+            // Arrange
+            string input = "aaa";
 
-			UkwType ukwType = new UkwA();
-			Rotor[] rotors = new Rotor[] { new Rotor1(), new Rotor2(), new Rotor3() };
-			int[] rotorPositions = new int[] { 1, 1, 1 }; // A, A, A
+            ///  |PLU|R-1|R-2|R-3|U-A|R-3|R-2|R-1|PLU|
+            ///1 A---D---L---H---P---U---W---M---B---B
+            ///2 A---D---G---R---W---K---U---H---N---L
+            ///3 A---D---D---K---X---H---D---C---V---V
+            string expectedOutput = "BLV";
 
-			for (int i = 0, amountOfRotors = rotors.Length; i < amountOfRotors; i++)
-			{
-				rotors[i].SetPosition(rotorPositions[i]);
-			}
+            UkwType ukwType = new UkwA();
+            Rotor[] rotors = new Rotor[] { new Rotor1(), new Rotor2(), new Rotor3() };
+            int[] rotorPositions = new int[] { 1, 1, 1 }; // A, A, A
 
-			Dictionary<char, char> plugboard = new Dictionary<char, char>();
-			plugboard['A'] = 'D';
-			plugboard['D'] = 'A';
-			plugboard['N'] = 'L';
-			plugboard['L'] = 'N';
+            for (int i = 0, amountOfRotors = rotors.Length; i < amountOfRotors; i++)
+            {
+                rotors[i].SetPosition(rotorPositions[i]);
+            }
 
-			IEnigmaEncoder encoder = new Enigma_I(ukwType, rotors, rotorPositions, plugboard);
+            Dictionary<char, char> plugboard = new Dictionary<char, char>();
+            plugboard['A'] = 'D';
+            plugboard['D'] = 'A';
+            plugboard['N'] = 'L';
+            plugboard['L'] = 'N';
 
-			// Act
-			string output = encoder.Encode(input);
+            IEnigmaEncoder encoder = new Enigma_I(ukwType, rotors, rotorPositions, plugboard);
 
-			// Assert
-			Assert.AreEqual(expectedOutput, output);
-		}
+            // Act
+            string output = encoder.Encode(input);
 
-		[TestMethod]
-		public void Encode_DecodeMessageWithPlugboardSetup_ReturnDecodedString()
-		{
-			// Arrange
-			string input = "BLV";
+            // Assert
+            Assert.AreEqual(expectedOutput, output);
+        }
 
-			///  |PLU|R-1|R-2|R-3|U-A|R-3|R-2|R-1|PLU|
-			///1 A---D---L---H---P---U---W---M---B---B
-			///2 A---D---G---R---W---K---U---H---N---L
-			///3 A---D---D---K---X---H---D---C---V---V
-			string expectedOutput = "AAA";
+        [TestMethod]
+        public void Encode_DecodeMessageWithPlugboardSetup_ReturnDecodedString()
+        {
+            // Arrange
+            string input = "BLV";
 
-			UkwType ukwType = new UkwA();
-			Rotor[] rotors = new Rotor[] { new Rotor1(), new Rotor2(), new Rotor3() };
-			int[] rotorPositions = new int[] { 1, 1, 1 }; // A, A, A
+            ///  |PLU|R-1|R-2|R-3|U-A|R-3|R-2|R-1|PLU|
+            ///1 A---D---L---H---P---U---W---M---B---B
+            ///2 A---D---G---R---W---K---U---H---N---L
+            ///3 A---D---D---K---X---H---D---C---V---V
+            string expectedOutput = "AAA";
 
-			for (int i = 0, amountOfRotors = rotors.Length; i < amountOfRotors; i++)
-			{
-				rotors[i].SetPosition(rotorPositions[i]);
-			}
+            UkwType ukwType = new UkwA();
+            Rotor[] rotors = new Rotor[] { new Rotor1(), new Rotor2(), new Rotor3() };
+            int[] rotorPositions = new int[] { 1, 1, 1 }; // A, A, A
 
-			Dictionary<char, char> plugboard = new Dictionary<char, char>();
-			plugboard['A'] = 'D';
-			plugboard['D'] = 'A';
-			plugboard['N'] = 'L';
-			plugboard['L'] = 'N';
+            for (int i = 0, amountOfRotors = rotors.Length; i < amountOfRotors; i++)
+            {
+                rotors[i].SetPosition(rotorPositions[i]);
+            }
 
-			IEnigmaEncoder encoder = new Enigma_I(ukwType, rotors, rotorPositions, plugboard);
+            Dictionary<char, char> plugboard = new Dictionary<char, char>();
+            plugboard['A'] = 'D';
+            plugboard['D'] = 'A';
+            plugboard['N'] = 'L';
+            plugboard['L'] = 'N';
 
-			// Act
-			string output = encoder.Encode(input);
+            IEnigmaEncoder encoder = new Enigma_I(ukwType, rotors, rotorPositions, plugboard);
 
-			// Assert
-			Assert.AreEqual(expectedOutput, output);
-		}
-		#endregion
-	}
+            // Act
+            string output = encoder.Encode(input);
+
+            // Assert
+            Assert.AreEqual(expectedOutput, output);
+        }
+        #endregion
+    }
 }

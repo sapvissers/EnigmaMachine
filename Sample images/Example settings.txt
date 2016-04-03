@@ -1,0 +1,14 @@
+Enigma emulator:
+	Enigma_I
+
+UKW type:
+	UKW-A
+
+Rotor selection:
+	IV	II	V
+
+Rotor positions:
+	C	U	Y
+
+Plugboard:
+	c-q;u-p;x-j;i-z;k-v;
